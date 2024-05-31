@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/multi_year_schedule
+    username: postgres
+    password: 5EQnuNKY41r6
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+server:
+  port: 8080
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
