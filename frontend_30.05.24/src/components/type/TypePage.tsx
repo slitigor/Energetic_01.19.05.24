@@ -23,7 +23,7 @@ const TypePage = () => {
         columns={column}
         columnName={typeColName}
         data={typeList}
-        addedDialog={<TypeAddDialog />}
+        addedDialog={<TypeAddDialog typeList={typeList} />}
       />
     </section>
   );

@@ -18,9 +18,6 @@ public class RzaType {
     @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(25)")
     private String type;
     @Column(nullable = false)
-    private Jurisdiction jurisdiction;
-    private Date commissioning;
-    @Column(nullable = false)
     private Byte verificationCycle;
     @ManyToOne
     @JoinColumn(name = "device_id", columnDefinition = "id", nullable = false)

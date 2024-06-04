@@ -15,8 +15,6 @@ public class RzaTypeMapper {
         RzaType model = new RzaType();
         model.setId(dto.getId());
         model.setType(dto.getType());
-        model.setJurisdiction(Jurisdiction.getByVal(dto.getJurisdiction()));
-        model.setCommissioning(dto.getCommissioning());
         model.setVerificationCycle(dto.getVerificationCycle());
         model.setRzaDevice(dMapper.convertToModel(dto.getRzaDevice()));
 
@@ -27,8 +25,6 @@ public class RzaTypeMapper {
         RzaTypeDto dto = new RzaTypeDto();
         dto.setId(model.getId());
         dto.setType(model.getType());
-        dto.setJurisdiction(model.getJurisdiction().getValue());
-        dto.setCommissioning(model.getCommissioning());
         dto.setVerificationCycle(model.getVerificationCycle());
         dto.setRzaDevice(dMapper.convertToDto(model.getRzaDevice()));
 

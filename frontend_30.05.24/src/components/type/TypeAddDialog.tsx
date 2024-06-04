@@ -1,16 +1,18 @@
 import { DialogTitle } from "@radix-ui/react-dialog";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { RzaDevice, jurisdictionList } from "@/data/types";
+import { RzaDevice, RzaType } from "@/data/types";
 import {
   Select,
   SelectContent,
@@ -19,18 +21,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-// import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-// import { FormControl } from "../ui/form";
-// import { Calendar } from "../ui/calendar";
-// import { format } from "date-fns";
+import { useRzaDeviceStore } from "@/data/stores/useRzaDeviceStore";
+import { useRzaTypeStore } from "@/data/stores/useRzaTypeStore";
+import { useUid } from "@/data/utils/uuid";
 
-const TypeAddDialog = () => {
+const TypeAddDialog = ({ typeList }: { typeList: RzaType[] }) => {
+  const [deviceList, getAllDevices] = useRzaDeviceStore((state) => [
+    state.deviceList,
+    state.actions.getAllDevices,
+  ]);
+  const [createType] = useRzaTypeStore((state) => [state.actions.createType]);
   const [isAddDialog, setIsAddDialog] = useState(false);
   const [type, setType] = useState("");
-  const [jurisdiction, setJurisdiction] = useState("");
-  const [commissioning, setCommissioning] = useState(new Date());
-  const [verificationCycle, setVerificationCycle] = useState<number>(3);
+  const [verificationCycle, setVerificationCycle] = useState<number>(6);
   const [rzaDevice, setRzaDevice] = useState<RzaDevice>();
+
+  //   const year = new Date(1970).getFullYear();
+  //   const years = Array.from(
+  //     new Array(2025 - year),
+  //     (_val, index) => index + year
+  //   );
+
+  const id = useUid(typeList.map((t) => t.id));
+
+  const handleSaveClick = () => {
+    if (type && verificationCycle) {
+      createType({
+        id: id,
+        type: type,
+        verificationCycle: verificationCycle,
+        rzaDevice: rzaDevice,
+      });
+      setType("");
+      setVerificationCycle(6);
+      setRzaDevice(undefined);
+    }
+  };
+
+  //   console.log(years);
+
+  useEffect(() => {
+    getAllDevices();
+  }, [getAllDevices]);
 
   return (
     <Dialog>
@@ -60,7 +92,7 @@ const TypeAddDialog = () => {
                 onChange={(e) => setType(e.target.value)}
               />
             </div>
-            <div className="grid grid-cols-[120px_1fr] items-center gap-4">
+            {/* <div className="grid grid-cols-[120px_1fr] items-center gap-4">
               <Label htmlFor="jurisdiction" className="text-right">
                 Принадлежность
               </Label>
@@ -81,48 +113,55 @@ const TypeAddDialog = () => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
-            </div>
-            <div className="grid grid-cols-[120px_1fr] items-center gap-4">
-              <Label htmlFor="commissioning" className="text-right">
-                Дата ввода
-              </Label>
-              {/* <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !commissioning && "text-muted-foreground"
-                      )}
-                    >
-                      {commissioning ? (
-                        format(commissioning, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={commissioning}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover> */}
-            </div>
+            </div> */}
             <div className="grid grid-cols-[120px_1fr] items-center gap-4">
               <Label htmlFor="verificationCycle" className="text-right">
                 Цикличность
               </Label>
+              <Input
+                id="verificationCycle"
+                type="number"
+                value={verificationCycle}
+                onChange={(e) => setVerificationCycle(parseInt(e.target.value))}
+              />
+            </div>
+            <div className="grid grid-cols-[120px_1fr] items-center gap-4">
+              <Label htmlFor="device">Устройство РЗА</Label>
+              <Select
+                onValueChange={(e) => {
+                  const dev = deviceList.find((d) => d.id === parseInt(e));
+                  if (dev !== undefined) setRzaDevice(dev);
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Выбор подразделения" />
+                </SelectTrigger>
+                <SelectContent id="device">
+                  <SelectGroup>
+                    {deviceList.map((dev) => (
+                      <SelectItem value={dev.id.toString()} key={dev.id}>
+                        {dev.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
+          <DialogFooter>
+            <Button
+              type="submit"
+              onClick={() => {
+                handleSaveClick();
+                setIsAddDialog(false);
+              }}
+            >
+              Сохранить
+            </Button>
+            <DialogClose asChild>
+              <Button onClick={() => setIsAddDialog(false)}>Отмена</Button>
+            </DialogClose>
+          </DialogFooter>
         </DialogContent>
       )}
     </Dialog>

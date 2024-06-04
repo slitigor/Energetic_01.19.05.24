@@ -2,7 +2,7 @@ package ru.slitigor.energetic.model.enums;
 
 public enum Jurisdiction {
     CHRDU("ЧРДУ"),
-    CHE("Челябэнерго");
+    CES("ЦЭС");
 
     private String value;
 

@@ -6,9 +6,7 @@ import lombok.Setter;
 import ru.slitigor.energetic.model.enums.ConnectionType;
 import ru.slitigor.energetic.model.enums.Voltage;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter

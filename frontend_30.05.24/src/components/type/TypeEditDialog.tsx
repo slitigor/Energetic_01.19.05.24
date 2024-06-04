@@ -1,4 +1,4 @@
-import { RzaType } from "@/data/types";
+import { RzaDevice, RzaType } from "@/data/types";
 import {
   DialogClose,
   DialogContent,
@@ -13,6 +13,14 @@ import { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useRzaDeviceStore } from "@/data/stores/useRzaDeviceStore";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const TypeEditDialog = ({
   edited,
@@ -27,9 +35,9 @@ const TypeEditDialog = ({
     state.actions.getAllDevices,
   ]);
   const [type, setType] = useState(edited.type);
-  const [commissioning, setCommissioning] = useState(edited.commissioning);
-  const [jurisdiction, setJurisdiction] = useState(edited.jurisdiction);
-  const [rzaDevice, setRzaDevice] = useState(edited.rzaDevice);
+  const [rzaDevice, setRzaDevice] = useState<RzaDevice>(
+    edited.rzaDevice ? edited.rzaDevice : deviceList[0]
+  );
   const [verificationCycle, setVerificationCycle] = useState(
     edited.verificationCycle
   );
@@ -38,8 +46,6 @@ const TypeEditDialog = ({
     updateType(edited.id, {
       id: edited.id,
       type: type,
-      commissioning: commissioning,
-      jurisdiction: jurisdiction,
       rzaDevice: rzaDevice,
       verificationCycle: verificationCycle,
     });
@@ -72,12 +78,41 @@ const TypeEditDialog = ({
             </Label>
             <Input
               id="verificationCycle"
+              type="number"
               value={verificationCycle}
               onChange={(e) => setVerificationCycle(parseInt(e.target.value))}
             />
           </div>
+          <div className="grid grid-cols-[120px_1fr] items-center gap-4">
+            <Label htmlFor="device">Устройство РЗА</Label>
+            <Select
+              onValueChange={(e) => {
+                const dev = deviceList.find((d) => d.id === parseInt(e));
+                if (dev !== undefined) setRzaDevice(dev);
+              }}
+              value={rzaDevice.id.toString()}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Выбор подразделения" />
+              </SelectTrigger>
+              <SelectContent id="device">
+                <SelectGroup>
+                  {deviceList.map((dev) => (
+                    <SelectItem value={dev.id.toString()} key={dev.id}>
+                      {dev.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline" onClick={() => setIsEdit(false)}>
+              Отмена
+            </Button>
+          </DialogClose>
           <Button
             variant="outline"
             type="submit"
@@ -88,11 +123,6 @@ const TypeEditDialog = ({
           >
             Сохранить
           </Button>
-          <DialogClose>
-            <Button variant="outline" onClick={() => setIsEdit(false)}>
-              Отмена
-            </Button>
-          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </DialogPortal>

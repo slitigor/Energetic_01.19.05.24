@@ -47,26 +47,16 @@ export const column: ColumnDef<RzaType>[] = [
       />
     ),
   },
-  {
-    accessorKey: "jurisdiction",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="jurisdiction"
-        titleList={typeColName}
-      />
-    ),
-  },
-  {
-    accessorKey: "commissioning",
-    header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="commissioning"
-        titleList={typeColName}
-      />
-    ),
-  },
+  // {
+  //   accessorKey: "jurisdiction",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader
+  //       column={column}
+  //       title="jurisdiction"
+  //       titleList={typeColName}
+  //     />
+  //   ),
+  // },
   {
     accessorKey: "verificationCycle",
     header: ({ column }) => (
@@ -86,6 +76,10 @@ export const column: ColumnDef<RzaType>[] = [
         titleList={typeColName}
       />
     ),
+    cell: ({ row }) => {
+      const device = row.original.rzaDevice;
+      return <div>{device?.name}</div>;
+    },
   },
   {
     id: "actions",

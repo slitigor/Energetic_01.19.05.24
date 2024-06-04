@@ -16,7 +16,7 @@ const DeviceAddDialog = () => {
       <DialogTrigger asChild>
         <Button
           variant="outline"
-          title="Новое присоединение"
+          title="Новое устройство"
           onClick={() => setIsAddDialog(true)}
         >
           <span className="sr-only">Новое устройство</span>

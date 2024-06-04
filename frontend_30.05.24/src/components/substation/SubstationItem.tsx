@@ -1,9 +1,28 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Substation } from "@/data/types";
+import ConnectionAddDialog from "./ConnectionAddDialog";
+import { ScrollArea } from "../ui/scroll-area";
+import { useConnectionStore } from "@/data/stores/useConectionStore";
+import { useEffect } from "react";
 
 const SubstationItem = (substation: Substation) => {
+  const [connectionList, getAllConnections] = useConnectionStore((state) => [
+    state.connectionList,
+    state.actions.getAllConnections,
+  ]);
+
+  useEffect(() => {
+    getAllConnections();
+  }, [getAllConnections]);
+
   return (
     <Card key={substation.id} className="min-w-[240px]">
       <CardHeader>
@@ -31,7 +50,34 @@ const SubstationItem = (substation: Substation) => {
           </Label>
           <Input id="district" value={substation.district} disabled />
         </div>
+        <div className="flex flex-col justify-start items-center gap-4 px-2">
+          <Label htmlFor="connectionList">Присоединения:</Label>
+
+          {connectionList.filter((c) => c.substation.id === substation.id)
+            .length === 0 ? (
+            <div>Список пуст</div>
+          ) : (
+            <ScrollArea className="h-40 w-full rounded-md border">
+              <div className="p-4">
+                {connectionList
+                  .filter((conn) => conn.substation.id === substation.id)
+                  .map((c) => (
+                    <div>
+                      {c.connectionType} {c.voltage} {c.name}
+                    </div>
+                  ))}
+              </div>
+            </ScrollArea>
+          )}
+        </div>
       </div>
+      <CardFooter className="flex justify-end gap-2 items-center mt-6">
+        <ConnectionAddDialog
+          substation={substation}
+          // currentConnections={currConnections}
+          // setCurrentConnections={setCurrentConnections}
+        />
+      </CardFooter>
     </Card>
   );
 };

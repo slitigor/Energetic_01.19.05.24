@@ -59,8 +59,6 @@ export type RzaDevice = z.infer<typeof schemaRzaDevice>;
 export const schemaRzaType = z.object({
   id: z.number(),
   type: z.string(),
-  jurisdiction: z.string(),
-  commissioning: z.date(),
   verificationCycle: z.number(),
   rzaDevice: schemaRzaDevice.optional(),
 });
@@ -88,7 +86,7 @@ export const schemaConnection = z.object({
   connectionType: z.string(),
   voltage: z.string(),
   substation: schemaSubstation,
-  deviceList: schemaRzaDevice.optional(),
+  deviceList: schemaRzaDevice.array().optional(),
 });
 
 export const schemaConnectionStore = z.object({
@@ -154,7 +152,7 @@ export const connectionTypeList: string[] = [
   "Общеподстанционные устройства",
 ];
 
-export const jurisdictionList: string[] = ["ЧРДУ", "Челябэнерго"];
+export const jurisdictionList: string[] = ["ЧРДУ", "ЦЭС"];
 
 export const substationColName = new Map([
   ["id", "ID"],

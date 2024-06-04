@@ -10,8 +10,6 @@ import java.util.Date;
 public class RzaTypeDto {
     private Integer id;
     private String type;
-    private String jurisdiction;
-    private Date commissioning;
     private Byte verificationCycle;
     private RzaDeviceDto rzaDevice;
 }
