@@ -4,7 +4,6 @@ import { Separator } from "./ui/separator";
 import SubstationPage from "@/components/substation/SubstationPage";
 import DevicePage from "./device/DevicePage";
 import TypePage from "./type/TypePage";
-import ConnectionList from "./substation/ConnectionList";
 
 const MainContent = () => {
   const [tab, setTab] = useState("main");
@@ -22,11 +21,6 @@ const MainContent = () => {
       {tab === "substation" && <SubstationPage />}
       {tab === "device" && <DevicePage />}
       {tab === "type" && <TypePage />}
-      {tab === "connection" && (
-        <div className="m-auto p-2">
-          <ConnectionList />
-        </div>
-      )}
     </section>
   );
 };
