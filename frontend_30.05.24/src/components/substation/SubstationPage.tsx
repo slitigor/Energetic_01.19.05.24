@@ -9,6 +9,43 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../ui/carousel";
+import { Substation, districtList } from "@/data/types";
+import { Label } from "../ui/label";
+import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
+import { Button } from "../ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command";
+import { cn } from "@/lib/utils";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+
+const frameworks = [
+  {
+    value: "chelyab",
+    label: "Челябинский РЭС",
+  },
+  {
+    value: "argayash",
+    label: "Аргаяшский РЭС",
+  },
+  {
+    value: "emanj",
+    label: "Еманжелинский РЭС",
+  },
+  {
+    value: "etkul",
+    label: "Еткульский РЭС",
+  },
+  {
+    value: "kaslin",
+    label: "Каслинский РЭС",
+  },
+];
 
 const SubstationPage = () => {
   const [substationList, actions] = useSubstationStore((state) => [
@@ -18,6 +55,10 @@ const SubstationPage = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [district, setDistrict] = useState("");
+  const [currentSubstations, setCurrentSubstations] =
+    useState<Substation[]>(substationList);
 
   useEffect(() => {
     actions.getAllSubstation();
@@ -32,26 +73,114 @@ const SubstationPage = () => {
     });
   }, [api]);
 
+  const filteredSubstation = (currentDistrict: string) => {
+    setDistrict(currentDistrict === district ? "" : currentDistrict);
+    console.log(district);
+
+    if (district === "") setCurrentSubstations(substationList);
+    else
+      setCurrentSubstations(
+        substationList.filter((s) => s.district === currentDistrict)
+      );
+  };
+
   return (
     <section className="container mx-auto py-6">
       <h2 className="text-[16px] uppercase tracking-wider font-bold mb-2">
         Список подстанций
       </h2>
-      {/* <div className="grid grid-flow-row md:grid-cols-3 sm:grid-cols-2 items-start justify-start gap-4">
-        {substationList.map((substation) => (
-          <SubstationItem
-            key={substation.id}
-            id={substation.id}
-            name={substation.name}
-            psSchema={substation.psSchema}
-            district={substation.district}
-          />
-        ))}
-      </div> */}
+      <div className="mb-4">
+        <Label>Выбор района:</Label>
+        {/* <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[200px] justify-between"
+            >
+              {value
+                ? districtList.find((district) => district === value)
+                : "Выбор РЭС"}
+              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Поиск РЭС..." className="h-9" />
+              <CommandEmpty>РЭС не найден.</CommandEmpty>
+              <CommandGroup>
+                {districtList.map((district) => (
+                  <CommandItem
+                    key={district}
+                    value={district}
+                    onSelect={(currentValue) => {
+                      setValue(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {district}
+                    <CheckIcon
+                      className={cn(
+                        "ml-auto h-4 w-4",
+                        value === district ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover> */}
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-[200px] justify-between"
+            >
+              {district
+                ? districtList.find((d) => d === district)
+                : // ?.label
+                  "Выбери район..."}
+              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Поиск района..." className="h-9" />
+              <CommandList>
+                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandGroup>
+                  {districtList.map((d) => (
+                    <CommandItem
+                      key={d}
+                      value={d}
+                      onSelect={(currentDistrict) => {
+                        filteredSubstation(currentDistrict);
+                        setOpen(false);
+                      }}
+                    >
+                      {d}
+                      <CheckIcon
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          district === d ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
       <div>
         <Carousel setApi={setApi} className="w-full">
           <CarouselContent>
-            {substationList.map((substation) => (
+            {currentSubstations.map((substation) => (
               <CarouselItem key={substation.id}>
                 <SubstationItem
                   key={substation.id}
