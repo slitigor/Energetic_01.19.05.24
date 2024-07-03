@@ -7,19 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.slitigor.energetic.dto.ConnectionDto;
-import ru.slitigor.energetic.dto.RzaDeviceDto;
 import ru.slitigor.energetic.mapper.ConnectionMapper;
-import ru.slitigor.energetic.mapper.RzaDeviceMapper;
 import ru.slitigor.energetic.model.Connection;
-import ru.slitigor.energetic.model.RzaDevice;
 import ru.slitigor.energetic.service.ConnectionService;
 import ru.slitigor.energetic.utils.ErrorMessageBuilder;
 import ru.slitigor.energetic.utils.ValidationException;
 import ru.slitigor.energetic.utils.validator.ConnectionValidator;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("connection")
@@ -28,7 +23,6 @@ import java.util.stream.Collectors;
 public class ConnectionController {
     private final ConnectionService service;
     private final ConnectionMapper mapper;
-    private final RzaDeviceMapper deviceMapper;
     private final ConnectionValidator validator;
 
     @GetMapping

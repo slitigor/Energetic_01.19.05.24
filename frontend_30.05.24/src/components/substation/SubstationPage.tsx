@@ -23,29 +23,7 @@ import {
 } from "../ui/command";
 import { cn } from "@/lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-
-const frameworks = [
-  {
-    value: "chelyab",
-    label: "Челябинский РЭС",
-  },
-  {
-    value: "argayash",
-    label: "Аргаяшский РЭС",
-  },
-  {
-    value: "emanj",
-    label: "Еманжелинский РЭС",
-  },
-  {
-    value: "etkul",
-    label: "Еткульский РЭС",
-  },
-  {
-    value: "kaslin",
-    label: "Каслинский РЭС",
-  },
-];
+import SubstationAddDialog from "./SubstationAddDialog";
 
 const SubstationPage = () => {
   const [substationList, actions] = useSubstationStore((state) => [
@@ -75,7 +53,6 @@ const SubstationPage = () => {
 
   const filteredSubstation = (currentDistrict: string) => {
     setDistrict(currentDistrict === district ? "" : currentDistrict);
-    console.log(district);
 
     if (district === "") setCurrentSubstations(substationList);
     else
@@ -89,94 +66,57 @@ const SubstationPage = () => {
       <h2 className="text-[16px] uppercase tracking-wider font-bold mb-2">
         Список подстанций
       </h2>
-      <div className="mb-4">
-        <Label>Выбор района:</Label>
-        {/* <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="w-[200px] justify-between"
-            >
-              {value
-                ? districtList.find((district) => district === value)
-                : "Выбор РЭС"}
-              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
-            <Command>
-              <CommandInput placeholder="Поиск РЭС..." className="h-9" />
-              <CommandEmpty>РЭС не найден.</CommandEmpty>
-              <CommandGroup>
-                {districtList.map((district) => (
-                  <CommandItem
-                    key={district}
-                    value={district}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
-                      setOpen(false);
-                    }}
-                  >
-                    {district}
-                    <CheckIcon
-                      className={cn(
-                        "ml-auto h-4 w-4",
-                        value === district ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover> */}
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="w-[200px] justify-between"
-            >
-              {district
-                ? districtList.find((d) => d === district)
-                : // ?.label
-                  "Выбери район..."}
-              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
-            <Command>
-              <CommandInput placeholder="Поиск района..." className="h-9" />
-              <CommandList>
-                <CommandEmpty>No framework found.</CommandEmpty>
-                <CommandGroup>
-                  {districtList.map((d) => (
-                    <CommandItem
-                      key={d}
-                      value={d}
-                      onSelect={(currentDistrict) => {
-                        filteredSubstation(currentDistrict);
-                        setOpen(false);
-                      }}
-                    >
-                      {d}
-                      <CheckIcon
-                        className={cn(
-                          "ml-auto h-4 w-4",
-                          district === d ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+      <div className="flex gap-2 items-center justify-between">
+        <div className="mb-4">
+          <Label>Выбор района:</Label>
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={open}
+                className="w-[200px] justify-between"
+              >
+                {district
+                  ? districtList.find((d) => d === district)
+                  : // ?.label
+                    "Выбери район..."}
+                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[200px] p-0">
+              <Command>
+                <CommandInput placeholder="Поиск района..." className="h-9" />
+                <CommandList>
+                  <CommandEmpty>No framework found.</CommandEmpty>
+                  <CommandGroup>
+                    {districtList.map((d) => (
+                      <CommandItem
+                        key={d}
+                        value={d}
+                        onSelect={(currentDistrict) => {
+                          filteredSubstation(currentDistrict);
+                          setOpen(false);
+                        }}
+                      >
+                        {d}
+                        <CheckIcon
+                          className={cn(
+                            "ml-auto h-4 w-4",
+                            district === d ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <SubstationAddDialog />
       </div>
+
       <div>
         <Carousel setApi={setApi} className="w-full">
           <CarouselContent>

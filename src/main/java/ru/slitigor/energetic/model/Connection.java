@@ -27,22 +27,22 @@ public class Connection {
     @JoinColumn(name = "substation_id", columnDefinition = "id", nullable = false)
     private Substation substation;
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "conn_device",
+    @JoinTable(name = "connection_protection",
         joinColumns = @JoinColumn(name = "connection_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "rza_device_id", referencedColumnName = "id")
+        inverseJoinColumns = @JoinColumn(name = "protection_id", referencedColumnName = "id")
     )
-    private Set<RzaDevice> deviceList = new HashSet<>();
+    private Set<Protection> protectionList = new HashSet<>();
 
-    public void addDevice(RzaDevice device) {
-        if (deviceList.contains(device)) return;
-        deviceList.add(device);
-        device.getConnectionList().add(this);
+    public void addProtection(Protection protection) {
+        if (protectionList.contains(protection)) return;
+        protectionList.add(protection);
+        protection.getConnectionList().add(this);
     }
 
-    public void removeDevice(RzaDevice device) {
-        if (deviceList.contains(device)) {
-            deviceList.remove(device);
-            device.getConnectionList().remove(this);
+    public void removeProtection(Protection protection) {
+        if (protectionList.contains(protection)) {
+            protectionList.remove(protection);
+            protection.getConnectionList().remove(this);
         }
     }
 }

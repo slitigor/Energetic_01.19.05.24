@@ -3,9 +3,9 @@ package ru.slitigor.energetic.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import ru.slitigor.energetic.model.enums.Jurisdiction;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +19,6 @@ public class RzaType {
     private String type;
     @Column(nullable = false)
     private Byte verificationCycle;
-    @ManyToOne
-    @JoinColumn(name = "device_id", columnDefinition = "id", nullable = false)
-    private RzaDevice rzaDevice;
+    @OneToMany(mappedBy = "type")
+    private List<Protection> protectionList = new ArrayList<>();
 }

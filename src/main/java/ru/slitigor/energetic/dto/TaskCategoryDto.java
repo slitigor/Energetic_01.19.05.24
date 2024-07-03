@@ -5,8 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RzaTypeDto {
+public class TaskCategoryDto {
     private Integer id;
-    private String type;
-    private Byte verificationCycle;
+    private String title;
 }

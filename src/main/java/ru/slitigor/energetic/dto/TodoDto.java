@@ -10,4 +10,5 @@ public class TodoDto {
     private String title;
     private String description;
     private String stage;
+    private TaskCategoryDto category;
 }

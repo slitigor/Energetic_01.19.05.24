@@ -134,6 +134,13 @@ export type ConnectionStoreState = z.infer<typeof schemaConnectionStore>;
 
 export type Connection = z.infer<typeof schemaConnection>;
 
+export type Id = string | number;
+
+export type TaskCategory = {
+  id: number;
+  title: string;
+};
+
 export const dbPath = "http://localhost:8080/";
 
 export const schemaList: string[] = [

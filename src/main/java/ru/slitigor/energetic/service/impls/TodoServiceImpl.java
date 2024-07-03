@@ -3,8 +3,10 @@ package ru.slitigor.energetic.service.impls;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.slitigor.energetic.model.TaskCategory;
 import ru.slitigor.energetic.model.Todo;
 import ru.slitigor.energetic.repository.TodoRepository;
+import ru.slitigor.energetic.service.TaskCategoryService;
 import ru.slitigor.energetic.service.TodoService;
 import ru.slitigor.energetic.utils.ItemAlreadyExistsException;
 import ru.slitigor.energetic.utils.ResourceNotFoundException;
@@ -17,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TodoServiceImpl implements TodoService {
     private final TodoRepository repository;
+    private final TaskCategoryService categoryService;
 
     @Override
     public Todo getById(Long id) {
@@ -36,6 +39,7 @@ public class TodoServiceImpl implements TodoService {
         if (isExists.isPresent()) throw new ItemAlreadyExistsException(String.format(
                 "The todo with the id '%s' already exists!", todo.getId()
         ));
+        updateLinkCategory(todo);
         return repository.save(todo);
     }
 
@@ -45,6 +49,7 @@ public class TodoServiceImpl implements TodoService {
         Optional<Todo> isExists = repository.findById(id);
         if (isExists.isEmpty()) throw new ResourceNotFoundException("Todo", "id", id.toString());
         todo.setId(id);
+        updateLinkCategory(todo);
         return repository.save(todo);
     }
 
@@ -52,5 +57,11 @@ public class TodoServiceImpl implements TodoService {
     @Transactional
     public void deleteTodo(Todo todo) {
         repository.delete(todo);
+    }
+
+    private void updateLinkCategory(Todo todo) {
+        TaskCategory category = categoryService.getById(todo.getCategory().getId());
+        todo.setCategory(category);
+        category.getTodoList().add(todo);
     }
 }

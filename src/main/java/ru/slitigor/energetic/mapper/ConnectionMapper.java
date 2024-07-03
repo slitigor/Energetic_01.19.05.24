@@ -3,9 +3,9 @@ package ru.slitigor.energetic.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.slitigor.energetic.dto.ConnectionDto;
-import ru.slitigor.energetic.dto.RzaDeviceDto;
+import ru.slitigor.energetic.dto.ProtectionDto;
 import ru.slitigor.energetic.model.Connection;
-import ru.slitigor.energetic.model.RzaDevice;
+import ru.slitigor.energetic.model.Protection;
 import ru.slitigor.energetic.model.enums.ConnectionType;
 import ru.slitigor.energetic.model.enums.Voltage;
 
@@ -13,7 +13,7 @@ import ru.slitigor.energetic.model.enums.Voltage;
 @RequiredArgsConstructor
 public class ConnectionMapper {
     private final SubstationMapper sMapper;
-    private final RzaDeviceMapper dMapper;
+    private final ProtectionMapper pMapper;
 
     public Connection convertToModel(ConnectionDto dto) {
         Connection model = new Connection();
@@ -21,9 +21,9 @@ public class ConnectionMapper {
         model.setName(dto.getName());
         model.setConnectionType(ConnectionType.getTypeByVal(dto.getConnectionType()));
         model.setVoltage(Voltage.getNominalByVal(dto.getVoltage()));
-        for (RzaDeviceDto devDto: dto.getDeviceList()) {
-            RzaDevice dev = dMapper.convertToModel(devDto);
-            model.addDevice(dev);
+        for (ProtectionDto protectionDto: dto.getProtectionList()) {
+            Protection protection = pMapper.convertToModel(protectionDto);
+            model.addProtection(protection);
         }
         model.setSubstation(sMapper.convertToModel(dto.getSubstation()));
 
@@ -36,9 +36,9 @@ public class ConnectionMapper {
         dto.setName(model.getName());
         dto.setConnectionType(model.getConnectionType().getValue());
         dto.setVoltage(model.getVoltage().getValue());
-        for (RzaDevice dModel: model.getDeviceList()) {
-            RzaDeviceDto devDto = dMapper.convertToDto(dModel);
-            dto.getDeviceList().add(devDto);
+        for (Protection pModel: model.getProtectionList()) {
+            ProtectionDto pDto = pMapper.convertToDto(pModel);
+            dto.getProtectionList().add(pDto);
         }
         dto.setSubstation(sMapper.convertToDto(model.getSubstation()));
 

@@ -9,6 +9,9 @@ const Navbar = ({ setTab }: { setTab: (arg: string) => void }) => {
       <Button variant={"outline"} onClick={() => setTab("todo")}>
         Задачи
       </Button>
+      <Button variant={"outline"} onClick={() => setTab("test")}>
+        Тест
+      </Button>
     </nav>
   );
 };

@@ -5,9 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -21,9 +19,6 @@ public class RzaDevice {
     private String name;
     @Column(nullable = false)
     private String description;
-    @OneToMany(mappedBy = "rzaDevice")
-    private List<RzaType> typeList = new ArrayList<>();
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            fetch = FetchType.LAZY, mappedBy = "deviceList")
-    private Set<Connection> connectionList = new HashSet<>();
+    @OneToMany(mappedBy = "device")
+    private List<Protection> protectionList = new ArrayList<>();
 }

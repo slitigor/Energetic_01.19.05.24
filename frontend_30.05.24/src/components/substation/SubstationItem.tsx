@@ -75,11 +75,7 @@ const SubstationItem = (substation: Substation) => {
         </div>
       </div>
       <CardFooter className="flex justify-end gap-2 items-center mt-6">
-        <ConnectionAddDialog
-          substation={substation}
-          // currentConnections={currConnections}
-          // setCurrentConnections={setCurrentConnections}
-        />
+        <ConnectionAddDialog substation={substation} />
       </CardFooter>
     </Card>
   );

@@ -3,10 +3,8 @@ package ru.slitigor.energetic.service.impls;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.slitigor.energetic.model.RzaDevice;
 import ru.slitigor.energetic.model.RzaType;
 import ru.slitigor.energetic.repository.RzaTypeRepository;
-import ru.slitigor.energetic.service.RzaDeviceService;
 import ru.slitigor.energetic.service.RzaTypeService;
 import ru.slitigor.energetic.utils.ItemAlreadyExistsException;
 import ru.slitigor.energetic.utils.ResourceNotFoundException;
@@ -19,8 +17,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RzaTypeServiceImpl implements RzaTypeService {
     private final RzaTypeRepository repository;
-    private final RzaDeviceService service;
-
     @Override
     public RzaType getById(Integer id) {
         return repository.findById(id).orElseThrow(() ->
@@ -44,7 +40,6 @@ public class RzaTypeServiceImpl implements RzaTypeService {
         Optional<RzaType> isExists = repository.findByType(type.getType());
         if (isExists.isPresent()) throw new ItemAlreadyExistsException(String.format(
                 "The Rza Type with the type '%s' already exists!", type.getType()));
-        updateLinkDevice(type);
         return repository.save(type);
     }
 
@@ -54,7 +49,6 @@ public class RzaTypeServiceImpl implements RzaTypeService {
         Optional<RzaType> isExists = repository.findById(id);
         if (isExists.isEmpty()) throw new ResourceNotFoundException("RzaType", "id", id.toString());
         type.setId(id);
-        updateLinkDevice(type);
         return repository.save(type);
     }
 
@@ -70,9 +64,4 @@ public class RzaTypeServiceImpl implements RzaTypeService {
         repository.delete(type);
     }
 
-    private void updateLinkDevice(RzaType type) {
-        RzaDevice device = service.getByName(type.getRzaDevice().getName());
-        type.setRzaDevice(device);
-        device.getTypeList().add(type);
-    }
 }

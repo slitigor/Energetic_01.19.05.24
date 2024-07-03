@@ -14,5 +14,5 @@ public class ConnectionDto {
     private String connectionType;
     private String voltage;
     private SubstationDto substation;
-    private Set<RzaDeviceDto> deviceList = new HashSet<>();
+    private Set<ProtectionDto> protectionList = new HashSet<>();
 }

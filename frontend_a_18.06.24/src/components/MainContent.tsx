@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Separator } from "./ui/separator";
 import Navbar from "./Navbar";
 import TodoPage from "./todos/TodoPage";
+import TestPage from "./todos/TestPage";
 
 const MainContent = () => {
   const [tab, setTab] = useState("main");
@@ -16,6 +17,7 @@ const MainContent = () => {
         </div>
       )}
       {tab === "todo" && <TodoPage />}
+      {tab === "test" && <TestPage />}
     </section>
   );
 };

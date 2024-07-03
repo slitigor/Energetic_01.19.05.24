@@ -18,4 +18,7 @@ public class Todo {
     private String description;
     @Column(nullable = false)
     private Stage stage;
+    @ManyToOne
+    @JoinColumn(name = "category_id", columnDefinition = "id", nullable = false)
+    private TaskCategory category;
 }
